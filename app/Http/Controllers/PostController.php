@@ -7,13 +7,14 @@ use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Auth;
 use App\Models\Post;
 use App\Http\Requests\PostRequest;
+use Illuminate\Support\Facades\DB;
 
 class PostController extends Controller
 {
     // 一覧ページ
     public function index()
     {
-        $posts = Auth::user()->posts()->orderBy('created_at', 'desc')->get();
+        $posts = Auth::user()->posts()->orderBy('updated_at', 'asc')->get();
 
         return view('posts.index', compact('posts'));
     }
@@ -67,7 +68,8 @@ class PostController extends Controller
     }
 
     // 削除機能
-    public function destroy(Post $post) {
+    public function destroy(Post $post)
+    {
         if ($post->user_id !== Auth::id()) {
             return redirect()->route('posts.index')->with('error_message', '不正なアクセスです。');
         }
